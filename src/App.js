@@ -1,23 +1,27 @@
-import logo from './logo.svg';
+import { useState, useEffect } from 'react';
 import './App.css';
+import AddBox from './components/AddBox';
+import DisplayRecords from './components/DisplayRecords';
 
 function App() {
+  const [allRecords, setAllRecords] = useState([]);
+  useEffect(() => {
+    if(allRecords.length>0 ) localStorage.setItem('records', JSON.stringify(allRecords));
+  }, [allRecords]);
+
+  useEffect(() => {
+    const items = JSON.parse(localStorage.getItem('records'));
+    if (items) {
+     setAllRecords(items);
+    }
+  }, []);
+  const addInAllRecords = (record) =>{
+    setAllRecords([...allRecords,record]);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <AddBox addInAllRecords={addInAllRecords}/>
+      <DisplayRecords allRecords={allRecords} />
     </div>
   );
 }
